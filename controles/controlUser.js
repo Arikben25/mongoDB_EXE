@@ -1,5 +1,6 @@
 import { getUseres, insertUser, getOne } from "../dal/dal.js"
 import bcrypt from "bcrypt"
+import {createToken} from "../middleware/token.js"
 
 export async function getUser(req, res) {
     try {
@@ -18,7 +19,11 @@ export async function insertUse(req, res) {
         const obj = { name: name, password: passHASH }
 
         const resolt = await insertUser(obj)
-        res.json(resolt)
+
+        const token = createToken(name)
+        console.log(token);
+
+        res.json({resolt:resolt, token: token})
     } catch (err) {
         res.status(500).json({ msg: "the error is", err })
     }
